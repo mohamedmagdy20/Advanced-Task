@@ -33,5 +33,8 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
         Route::patch('update/{id}','update');
         Route::patch('{id}/status','updateStatus');
         Route::delete('/{id}','destroy');
+        Route::delete('force_delete/{id}','forceDelete');
+        Route::get('trached','trashedData');
+        Route::get('restore/{id}','restore');
     });
 });

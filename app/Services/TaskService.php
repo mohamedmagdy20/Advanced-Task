@@ -64,4 +64,29 @@ class TaskService implements TaskInterface
             );
         }
     }
+
+
+    public function getTrashedData(){
+         $tasks =  $this->model->onlyTrashed()->forUser()
+            ->status($data['status'] ?? null)
+            ->priority($data['priority'] ?? null)
+            ->dueBetween($data['start_date'] ?? null , $data['end_date'] ?? null)
+            ->search($data['search'] ?? null)
+            ->orderByField($data['sort_by'] ?? null, $data['sort_dir'] ?? null)
+            ->paginate($data['per_page'] ?? 8);
+        return $tasks;
+    }
+
+    public function restore($id)
+    {
+        $task = $this->model->withTrashed()->findOrFail($id);
+        return $task->restore();
+    }
+
+    public function forceDelete($id)
+    {
+        $task = $this->model->withTrashed()->findOrFail($id);
+        return $task->forceDelete();
+    }
+    
 }

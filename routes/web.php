@@ -1,5 +1,7 @@
 <?php
 
+use App\Jobs\SendNewTaskJob;
+use App\Services\TaskNotificationService;
 use Illuminate\Support\Facades\Route;
 
 /*

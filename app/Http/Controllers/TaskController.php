@@ -57,5 +57,23 @@ class TaskController extends Controller
         return ApiResponser::successResponse('Task Delete');
     }
 
+    public function trashedData(ListTaskRequest $request)
+    {
+        $tasks = $this->taskService->getTrashedData();
+        return ApiResponser::successResponse('Trashed Task Retrived',200,TaskResource::collection($tasks));
+    }
+
+
+    public function restore($id)
+    {
+        $task = $this->taskService->restore($id);
+        return ApiResponser::successResponse('Task Restored');
+    }    
+
     
+    public function forceDelete($id)
+    {
+        $task = $this->taskService->forceDelete($id);
+        return ApiResponser::successResponse('Task Deleted Permentaly');
+    }    
 }

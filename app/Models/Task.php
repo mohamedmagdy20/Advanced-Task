@@ -17,7 +17,8 @@ class Task extends Model
         'due_date',
         'priority',
         'status',
-        'user_id'
+        'user_id',
+        'is_readed'
     ];
 
     public const STATUS_PENDING = 'pending';
@@ -38,6 +39,28 @@ class Task extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * mark as Send 
+     */
+    public function scopeSent(Builder $query)
+    {
+        return $query->where('is_sent',true);
+    }
+    /**
+     * mark as not Sent 
+     */
+    public function scopeNotSent(Builder $query)
+    {
+        return $query->where('is_sent',false);
+    }
+
+    public function isWithinFinal24Hours()
+    {
+        return now()->lessThan($this->due_date) &&
+               $this->due_date->diffInHours(now()) <= 24;
+    }
+    
     /**
      * Get Task By User Id
      */

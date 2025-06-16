@@ -12,7 +12,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Run Command every hour to Check upcoming Task Every Hour //
+        $schedule->command('task:check-notifications')->hourly()->withoutOverlapping()
+                 ->runInBackground();
+
+        // // Run Command every hour to Check Deadline Task Every Before 24 hour every Hour //
+        $schedule->command('task:check-due-date-notification')->hourly()->withoutOverlapping()
+                 ->runInBackground();
     }
 
     /**
