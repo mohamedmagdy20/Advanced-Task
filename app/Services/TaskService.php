@@ -66,7 +66,7 @@ class TaskService implements TaskInterface
     }
 
 
-    public function getTrashedData(){
+    public function getTrashedData($data){
          $tasks =  $this->model->onlyTrashed()->forUser()
             ->status($data['status'] ?? null)
             ->priority($data['priority'] ?? null)

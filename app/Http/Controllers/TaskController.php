@@ -59,7 +59,7 @@ class TaskController extends Controller
 
     public function trashedData(ListTaskRequest $request)
     {
-        $tasks = $this->taskService->getTrashedData();
+        $tasks = $this->taskService->getTrashedData($request->all());
         return ApiResponser::successResponse('Trashed Task Retrived',200,TaskResource::collection($tasks));
     }
 
