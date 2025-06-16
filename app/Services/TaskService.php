@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\TaskInterface;
 use App\Models\Task;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class TaskService implements TaskInterface
 {
@@ -43,10 +44,15 @@ class TaskService implements TaskInterface
         $task->update($data);
         return $task;
     }
-
     public function delete($id)
     {
-        return  $this->model->findOrFail($id)->delete();
+        $task = $this->model->findOrFail($id);
+    
+        if ($task->user_id == auth()->id()) {
+            return $task->delete(); // returns true/false
+        }
+    
+        throw new AuthorizationException('You are not authorized to delete this task.');
     }
     
     protected function validateStatusTransition(Task $task, string $newStatus)
@@ -86,7 +92,11 @@ class TaskService implements TaskInterface
     public function forceDelete($id)
     {
         $task = $this->model->withTrashed()->findOrFail($id);
-        return $task->forceDelete();
+ 
+        if ($task->user_id == auth()->id()) {
+            return $task->forceDelete(); 
+        }
+        throw new AuthorizationException('You are not authorized to delete this task.');
     }
     
 }
