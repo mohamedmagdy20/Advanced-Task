@@ -1,66 +1,96 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📝 Advanced Task Management System (Laravel 10)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A task management system built with Laravel 10 and Sanctum. It supports authenticated users, email notifications, queued jobs, and a clean service-based architecture.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📖 Project Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This Laravel application enables users to manage their personal tasks through a RESTful API. It includes secure user authentication, email notifications for new tasks, and ownership-based access control. The logic is decoupled using a service layer and background jobs for scalability and maintainability.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### ✅ Task Management (CRUD)
+- Create, read, update, and soft delete tasks
+- Each task includes title, description, due date, and status
+- Task statuses: `Pending`, `In Progress`, `Completed`, `Overdue`
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### ✅ Email Notifications via Queued Jobs
+- Tasks trigger notification emails through `SendNewTaskJob`
+- Uses Laravel Queues for asynchronous processing
+- Efficient with large task sets using `chunk(100)`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### ✅ User Authentication
+- Secure login via Laravel Sanctum
+- Tasks are user-specific and protected by ownership rules
 
-## Laravel Sponsors
+### ✅ Service-Oriented Architecture
+- Business logic separated into `TaskNotificationService`
+- Keeps controller, command, and job code clean
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### ✅ Authorization Logic
+- Only task owners can delete their tasks
+- Unauthorized actions return `403 Forbidden`
 
-### Premium Partners
+### ✅ Artisan Command Integration
+- Custom command `task:check-notifications` dispatches notification job
+- Can be run via scheduler (cron job) for automation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### ✅ Developer Tools
+- Ready for Laravel Sail or native environment
+- Pre-configured with Pint and PHPUnit
+- Logs sent emails and exceptions for debugging
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🧠 Design Decisions
 
-## Code of Conduct
+### 🔧 Job Queue for Emails
+- Sending emails via background jobs improves performance and user experience
+- The job processes tasks in batches using `chunk()` to prevent memory issues
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 🔧 Service Layer Abstraction
+- `TaskNotificationService` handles logic for getting new tasks and marking them as sent
+- Promotes the Single Responsibility Principle (SRP)
+- Easier testing and reuse across multiple components
 
-## Security Vulnerabilities
+### 🔧 Authorization Inside Service
+- Access control (user owns task) is checked directly in service method
+- Keeps logic centralized and avoids duplication across controllers/jobs
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 🔧 Command Separation
+- Artisan command triggers jobs without direct coupling
+- Enhances maintainability and allows automation via scheduler
 
-## License
+### 🔧 Logging and Error Handling
+- Email delivery success/failure is logged using Laravel’s `Log` facade
+- Exceptions are caught and rethrown in jobs for monitoring
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## ⚙️ Setup Instructions
+
+```bash
+# Clone the repo
+git clone https://github.com/mohamedmagdy20/Advanced-Task.git
+cd Advanced-Task
+
+# Install PHP dependencies
+composer install
+
+# Set up environment
+cp .env.example .env
+php artisan key:generate
+
+# Set up database
+php artisan migrate
+php artisan db:seed
+
+# (Optional) Compile frontend assets
+npm install
+npm run dev
+
+# Run queue worker
+php artisan queue:work

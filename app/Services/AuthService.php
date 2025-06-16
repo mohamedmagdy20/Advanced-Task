@@ -25,9 +25,7 @@ class AuthService implements AuthInterface
     public function login($data)
     {
         if (!Auth::attempt($data)) {
-            throw ValidationException::withMessages([
-                'data' => ['The provided credentials are incorrect.']
-            ]);
+              throw new \Illuminate\Auth\AuthenticationException('Invalid credentials');
         }
         $user = User::where('email', $data['email'])->firstOrFail();
         $user->tokens()->delete();

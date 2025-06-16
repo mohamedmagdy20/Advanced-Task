@@ -34,7 +34,7 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
         Route::patch('{id}/status','updateStatus')->name('tasks.update-status');
         Route::delete('/{id}','destroy')->name('tasks.destroy');
         Route::delete('force_delete/{id}','forceDelete')->name('tasks.force_delete');
-        Route::get('trached','trashedData')->name('tasks.trached');
-        Route::get('restore/{id}','restore')->name('tasks.restore');
+        Route::get('trashed','trashedData')->name('tasks.trached');
+        Route::patch('restore/{id}','restore')->name('tasks.restore');
     });
 });
