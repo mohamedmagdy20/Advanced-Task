@@ -10,17 +10,35 @@ This Laravel application enables users to manage their personal tasks through a 
 
 ---
 
+##  Api Collection Link
+- https://documenter.getpostman.com/view/23571272/2sB2x8EWEU#430a7f8e-b4d9-4298-82b6-d5b0282469c1
+
+
 ## ✨ Features
 
 ### ✅ Task Management (CRUD)
 - Create, read, update, and soft delete tasks
-- Each task includes title, description, due date, and status
+- Each task includes title, description, due date, priority , and status
 - Task statuses: `Pending`, `In Progress`, `Completed`, `Overdue`
+- Task Priority : `Low` , `High` , `Medium`
+- Retriving Data With Filter for Status , priority , Start Data , End Date
+- Handle Validation in Status flow 
+
+### ✅ Api Error Handler
+- Handle All Error Response in one Class Handler `App\Exception\Handler.php`
 
 ### ✅ Email Notifications via Queued Jobs
-- Tasks trigger notification emails through `SendNewTaskJob`
+- Tasks trigger notification emails through `SendNewTaskJob` , `SendTaskReminderJob`
 - Uses Laravel Queues for asynchronous processing
 - Efficient with large task sets using `chunk(100)`
+- SendNewTaskJob : for Notified User for UpComing Tasks
+- SendTaskReminderJob : for Notified User for Due Date Task before 24 hour
+
+### ✅ Cron Job with Email Notifications 
+- 2 Command running per Hour to Trigger Changes in Database
+- `php artisan task:check-notifications` : for UpComing Tasks
+- `php artisan task:check-due-date-notification` for Due Date Task before 24 hour
+
 
 ### ✅ User Authentication
 - Secure login via Laravel Sanctum
@@ -88,9 +106,9 @@ php artisan key:generate
 php artisan migrate
 php artisan db:seed
 
-# (Optional) Compile frontend assets
-npm install
-npm run dev
-
 # Run queue worker
 php artisan queue:work
+
+# Run schedule
+php artisan schedule:run
+
